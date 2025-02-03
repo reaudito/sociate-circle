@@ -81,7 +81,11 @@ pub fn CreatePost() -> impl IntoView {
             class="mt-4 p-4 border rounded cursor-pointer hover:bg-gray-100"
             on:click=move |_| set_post.set(improved_post.get())
         >
-        {move || if is_loading.get() { view! {<LoadingSpinner /> }.into_any()} else { view! { <div>{improved_post.get()}</div> }.into_any()}}
+        {move || if is_loading.get() { view! {<LoadingSpinner /> }.into_any()} else { let html_content = improved_post
+            .get()
+            .replace("\n", "<br>")
+            .replace("<think>", r#"<think><span class="italic text-sm">"#)
+            .replace("</think>", "</span></think>");   view! { <div inner_html={html_content}></div> }.into_any()}}
         </div>
     </div>
     }
