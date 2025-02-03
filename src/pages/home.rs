@@ -1,6 +1,7 @@
 // use crate::components::counter_btn::Button;
 use crate::components::navigation::nav::Nav;
 use leptos::prelude::*;
+use crate::components::posts::create_post::CreatePost;
 
 /// Default Home Page
 #[component]
@@ -34,6 +35,10 @@ pub fn Home() -> impl IntoView {
                         
                     </p>
                 </div>
+            </div>
+            <CreatePost />
+            <div>
+
             </div>
         </ErrorBoundary>
     }

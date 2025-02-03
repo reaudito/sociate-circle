@@ -3,69 +3,33 @@ use leptos::{ev::SubmitEvent, prelude::*};
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 use crate::components::navigation::nav::Nav;
+use wasm_bindgen::JsCast;
+use crate::router::RouterApp;
+use web_sys::{window, HtmlElement};
 
-#[wasm_bindgen]
-extern "C" {
-    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"])]
-    async fn invoke(cmd: &str, args: JsValue) -> JsValue;
-}
-
-#[derive(Serialize, Deserialize)]
-struct GreetArgs<'a> {
-    name: &'a str,
-}
 
 #[component]
 pub fn App() -> impl IntoView {
-    let (name, set_name) = signal(String::new());
-    let (greet_msg, set_greet_msg) = signal(String::new());
+    // Get the window object
+    let window = window().expect("should have a Window");
 
-    let update_name = move |ev| {
-        let v = event_target_value(&ev);
-        set_name.set(v);
+    // Check if the user prefers a dark color scheme
+    let prefers_dark_mode = match window.match_media("(prefers-color-scheme: dark)") {
+        Ok(Some(media_query_list)) => media_query_list.matches(),
+        _ => false,
     };
 
-    let greet = move |ev: SubmitEvent| {
-        ev.prevent_default();
-        spawn_local(async move {
-            let name = name.get_untracked();
-            if name.is_empty() {
-                return;
+    // Set the class on the <html> tag
+    if let Some(document) = window.document() {
+        if let Some(html) = document.document_element() {
+            let html: HtmlElement = html.unchecked_into();
+            if prefers_dark_mode {
+                html.set_class_name("dark w-full h-full bg-gray-900");
+            } else {
+                html.set_class_name("");
             }
-
-            let args = serde_wasm_bindgen::to_value(&GreetArgs { name: &name }).unwrap();
-            // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-            let new_msg = invoke("greet", args).await.as_string().unwrap();
-            set_greet_msg.set(new_msg);
-        });
-    };
-
-    view! {
-        <div>
-        <Nav/>
-        <main class="container">
-            <h1>"Welcome to Tauri + Leptos"</h1>
-
-            <div class="row">
-                <a href="https://tauri.app" target="_blank">
-                    <img src="public/tauri.svg" class="logo tauri" alt="Tauri logo"/>
-                </a>
-                <a href="https://docs.rs/leptos/" target="_blank">
-                    <img src="public/leptos.svg" class="logo leptos" alt="Leptos logo"/>
-                </a>
-            </div>
-            <p>"Click on the Tauri and Leptos logos to learn more."</p>
-
-            <form class="row" on:submit=greet>
-                <input
-                    id="greet-input"
-                    placeholder="Enter a name..."
-                    on:input=update_name
-                />
-                <button type="submit">"Greet"</button>
-            </form>
-            <p>{ move || greet_msg.get() }</p>
-        </main>
-        </div>
+        }
     }
+
+    view! { <RouterApp /> }
 }
