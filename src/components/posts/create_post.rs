@@ -62,23 +62,39 @@ pub fn CreatePost() -> impl IntoView {
         });
     };
 
+    let clear_improved_text = move |_| {
+        set_improved_post.set(String::new());
+        set_post.set(String::new());
+    };
+
     view! {
         <div class="p-4">
         <textarea
-            class="w-full h-64 p-2 border rounded"
+            class="w-full h-64 p-2 border rounded dark:bg-gray-800"
             placeholder="Write your post here..."
             prop:value=post
             on:input=move |e| set_post.set(event_target_value(&e))
         />
+
+        <div class="flex space-x-4 mt-2">
         <button
-            class="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+            class="px-4 py-2 bg-blue-500 text-white rounded"
             on:click=generate_improved_post
             disabled=move || is_loading.get()
         >
             {move || if is_loading.get() { "Loading..." } else { "Ask AI" }}
         </button>
+
+        <button
+            class="px-4 py-2 bg-blue-500 text-white rounded"
+            on:click=clear_improved_text
+            
+        >
+         "Clear"
+        </button>
+        </div>
         <div
-            class="mt-4 p-4 border rounded cursor-pointer hover:bg-gray-100"
+            class="mt-4 p-4 border rounded cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
             on:click=move |_| set_post.set(improved_post.get())
         >
         {move || if is_loading.get() { view! {<LoadingSpinner /> }.into_any()} else { let html_content = improved_post

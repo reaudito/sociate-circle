@@ -2,27 +2,32 @@
 
 This template should help get you started developing with Tauri and Leptos.
 
-## Recommended IDE Setup
-
-[VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
-
+```
+cargo install create-tauri-app --locked
+```
 
 Make sure you have installed the prerequisites for your OS: https://tauri.app/start/prerequisites/, then run:
+```
   cd sociate-circle
   cargo tauri android init
+```
 
 For Desktop development, run:
+```
   cargo tauri dev
+```
 
 For Android development, run:
+```
   cargo tauri android dev
+```
 
 
 ## Tailwindcss
 
 ```bash
 
-npx tailwindcss -i ./src/input.css -o ./css/output.css --watch
+./tailwindcss -i ./src/input.css -o ./css/output.css --watch
 
 ```
 
