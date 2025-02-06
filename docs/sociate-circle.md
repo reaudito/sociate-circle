@@ -20,7 +20,7 @@ Users stake tokens and vote on posts with a **1-5 rating system**. The incentive
 Moderation is **decentralized**, with moderators selected using the **seq-phragmen algorithm**. This ensures that content is reviewed fairly and in real time, preventing illegal or harmful material from spreading.
 
 ### Platform to Use
-The platform will use Tauri for mobile and desktop apps, and Subxt, Substrate, and Leptos for the front end. 
+The platform will use Tauri for mobile and desktop apps, and Subxt, Substrate, and Leptos for the front end, Iroh for decentralized storage.
 
 ![Home page](home_page_mobile.png)
 
